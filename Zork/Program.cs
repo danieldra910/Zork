@@ -12,9 +12,8 @@ namespace Zork
 
             string inputString = Console.ReadLine().Trim().ToUpper();
             Commands command = ToCommand(inputString);
-            
-            
-            
+            Console.WriteLine(command);
+
             if(command == Commands.Quit)
             {
                 Console.WriteLine("Thank you for playing.");
@@ -34,10 +33,12 @@ namespace Zork
             {
                 Console.WriteLine("You moved South");
             }
+
             else if (command == Commands.East)
             {
                 Console.WriteLine("You moved East");
             }
+
             else if (command == Commands.West)
             {
                 Console.WriteLine("You moved West");
@@ -50,18 +51,9 @@ namespace Zork
 
         }
 
-
         static Commands ToCommand(string commandString)
         {
-            if(Enum.TryParse<Commands>(commandString, true, out Commands command))
-            {
-                return command;
-            }
-
-            else
-            {
-                return Commands.Unknown;
-            }
+            return Enum.TryParse(commandString, true, out Commands result) ? result : Commands.Unknown;
         }
 
     }
