@@ -7,13 +7,12 @@ namespace Zork
     {
         static void Main(string[] args)
         {
-            
             Console.WriteLine("Welcome to Zork!");
             bool isRunning = true;
 
             while (isRunning)
             {
-                Console.Write("> ");
+                Console.Write($"{_rooms[_currentRoom]}\n>");
                 string inputString = Console.ReadLine().Trim().ToUpper();
                 Commands command = ToCommand(inputString);
 
@@ -31,7 +30,14 @@ namespace Zork
                     case Commands.South:
                     case Commands.East:
                     case Commands.West:
-                        outputString = $"You moved {command.ToString()}";
+                        if(Move(command))
+                        {
+                            outputString = $"You moved {command.ToString()}";
+                        }
+                        else
+                        {
+                            outputString = "This way is shut!";
+                        }
                         break;
                     default:
                         outputString = "Unknown command";
@@ -45,6 +51,34 @@ namespace Zork
         {
             return Enum.TryParse(commandString, true, out Commands result) ? result : Commands.Unknown;
         }
+
+        static bool Move(Commands command)
+        {
+            bool didMove = false;
+
+            switch(command)
+            {
+                case Commands.North:
+                case Commands.South:
+                    didMove = false;
+                    break;
+                
+                case Commands.East when _currentRoom < _rooms.Length-1:
+                    _currentRoom++;
+                    didMove = true;
+                    break;
+
+                case Commands.West when _currentRoom >0:
+                    _currentRoom--;
+                    didMove = true;
+                    break;
+            }
+
+            return didMove;
+        }
+
+        static readonly string[] _rooms = { "Forest", "West of the House","Behind the House","Clearing","Canyon View"};
+        static int _currentRoom = 1;
 
     }
 }
