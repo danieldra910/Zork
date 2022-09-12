@@ -5,6 +5,14 @@ namespace Zork
 {
     class Program
     {
+        static string CurrentRoom
+        {
+            get
+            {
+                return _rooms[_location.Row, _location.Column];
+            }
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to Zork!");
@@ -12,7 +20,7 @@ namespace Zork
 
             while (isRunning)
             {
-                Console.Write($"{_rooms[_currentRoom]}\n>");
+                Console.Write($"{CurrentRoom}\n>");
                 string inputString = Console.ReadLine().Trim().ToUpper();
                 Commands command = ToCommand(inputString);
 
@@ -58,18 +66,23 @@ namespace Zork
 
             switch(command)
             {
-                case Commands.North:
-                case Commands.South:
-                    didMove = false;
-                    break;
-                
-                case Commands.East when _currentRoom < _rooms.Length-1:
-                    _currentRoom++;
+                case Commands.North when _location.Row < _rooms.GetLength(0)-1:
+                    _location.Row++;
                     didMove = true;
                     break;
 
-                case Commands.West when _currentRoom >0:
-                    _currentRoom--;
+                case Commands.South when _location.Row > 0:
+                    _location.Row--;
+                    didMove = true;
+                    break;
+                   
+                case Commands.East when _location.Column < _rooms.GetLength(1)-1:
+                    _location.Column++;
+                    didMove = true;
+                    break;
+
+                case Commands.West when _location.Column >0:
+                    _location.Column--;
                     didMove = true;
                     break;
             }
@@ -77,8 +90,12 @@ namespace Zork
             return didMove;
         }
 
-        static readonly string[] _rooms = { "Forest", "West of the House","Behind the House","Clearing","Canyon View"};
-        static int _currentRoom = 1;
+        static readonly string[,] _rooms = {
+            {"Rocky Trail", "South of House","Canyon View" },
+            { "Forest", "West of the House", "Behind the House"},
+            {"Dense Woods", "North of House", "Clearing" }
+        };
 
+        static (int Row, int Column) _location = (1, 1);
     }
 }
