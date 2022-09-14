@@ -26,7 +26,7 @@ namespace Zork
                 string inputString = Console.ReadLine().Trim().ToUpper();
                 Commands command = ToCommand(inputString);
 
-                string outputString = "";
+                string outputString;
                 switch (command)
                 {
                     case Commands.Quit:
@@ -100,7 +100,7 @@ namespace Zork
 
         static (int Row, int Column) _location = (1, 1);
 
-        private static void InitializeRoomDescription()
+        static void InitializeRoomDescription()
         {
             _rooms[0, 0].Description = "You are on a rock-strewn trail.";
             _rooms[0, 1].Description = "You are facing the south side of a white house. There is no door here, and all the windows are barred.";
