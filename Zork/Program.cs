@@ -23,7 +23,7 @@ namespace Zork
             while (isRunning)
             {
                 Console.Write($"{CurrentRoom}\n>");
-                string inputString = Console.ReadLine().Trim().ToUpper();
+                string inputString = Console.ReadLine().Trim();
                 Commands command = ToCommand(inputString);
 
                 string outputString;
