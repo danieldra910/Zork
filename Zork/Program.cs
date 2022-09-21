@@ -5,7 +5,7 @@ namespace Zork
 {
     class Program
     {
-        static Room CurrentRoom
+        private static Room CurrentRoom
         {
             get
             {
@@ -13,7 +13,7 @@ namespace Zork
             }
         }
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.WriteLine("Welcome to Zork!");
             InitializeRoomDescription();
@@ -66,12 +66,12 @@ namespace Zork
             }
         }
 
-        static Commands ToCommand(string commandString)
+        private static Commands ToCommand(string commandString)
         {
             return Enum.TryParse(commandString, true, out Commands result) ? result : Commands.Unknown;
         }
 
-        static bool Move(Commands command)
+        private static bool Move(Commands command)
         {
             bool didMove = false;
 
@@ -101,15 +101,15 @@ namespace Zork
             return didMove;
         }
 
-        static readonly Room[,] _rooms = {
+        private static readonly Room[,] _rooms = {
             {new Room("Rocky Trail"), new Room("South of House"),new Room("Canyon View") },
             {new Room("Forest"), new Room("West of the House"), new Room("Behind the House")},
             {new Room("Dense Woods"), new Room("North of House"), new Room("Clearing")}
         };
 
-        static (int Row, int Column) _location = (1, 1);
+        private static (int Row, int Column) _location = (1, 1);
 
-        static void InitializeRoomDescription()
+        private static void InitializeRoomDescription()
         {
 
             Dictionary<string, Room> roomMap = new Dictionary<string, Room>();
