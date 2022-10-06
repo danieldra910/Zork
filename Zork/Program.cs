@@ -101,7 +101,6 @@ namespace Zork
                     didMove = true;
                     break;
             }
-
             return didMove;
         }
 
@@ -121,7 +120,6 @@ namespace Zork
             {
                 roomMap.Add(room.Name, room);
             }
-
 
             string[] lines = File.ReadAllLines(roomsFileName);
 
