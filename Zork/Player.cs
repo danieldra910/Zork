@@ -1,44 +1,44 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace Zork
 {
+
     public class Player
     {
-        public World World { get; }
-
-        [JsonIgnore]
-        public Room Location { get; private set; }
-
-        [JsonIgnore]
-        public string LocationName
+        public Room CurrentRoom
         {
-            get
-            {
-                return Location?.Name;
-            }
-            set
-            {
-                Location = World?.RoomsByName.GetValueOrDefault(value);
-            }
+            get => _currentRoom;
+            set => _currentRoom = value;
         }
 
-        public Player (World world,string startingLocation)
+        public List<Item> Inventory { get; }
+
+        public Player(World world, string startingLocation)
         {
-            World = world;
-            LocationName = startingLocation;
+            _world = world;
+
+            if (_world.RoomsByName.TryGetValue(startingLocation, out _currentRoom) == false)
+            {
+                throw new Exception($"Invalid starting location: {startingLocation}");
+            }
+
+            Inventory = new List<Item>();
         }
 
         public bool Move(Directions direction)
         {
-            bool isValidMove = Location.Neighbors.TryGetValue(direction, out Room destination);
-
-            if(isValidMove)
+            bool didMove = _currentRoom.Neighbors.TryGetValue(direction, out Room neighbor);
+            if (didMove)
             {
-                Location = destination;
+                CurrentRoom = neighbor;
             }
 
-            return isValidMove;
+            return didMove;
         }
+
+        private World _world;
+        private Room _currentRoom;
     }
 }

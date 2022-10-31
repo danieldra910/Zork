@@ -5,52 +5,84 @@ using System.Linq;
 
 namespace Zork
 {
-    public class Room: IEquatable<Room>
-
+    public class Room
     {
-        [JsonProperty(Order =1)]
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        [JsonProperty(Order =2)]
-        public string Description { get; private set; }
+        public string Description { get; set; }
 
-        [JsonProperty(PropertyName = "Neighbors", Order =3)]
+        [JsonIgnore]
+        public Dictionary<Directions, Room> Neighbors { get; private set; }
+
+        [JsonProperty]
         private Dictionary<Directions, string> NeighborNames { get; set; }
 
         [JsonIgnore]
-        public IReadOnlyDictionary <Directions, Room> Neighbors { get; private set; }
+        public List<Item> Inventory { get; private set; }
 
-  
-        public static bool operator == (Room lhs, Room rhs)
+        [JsonProperty]
+        private string[] InventoryNames { get; set; }
+
+        public Room(string name, string description, Dictionary<Directions, string> neighborNames, string[] inventoryNames)
+        {
+            Name = name;
+            Description = description;
+            NeighborNames = neighborNames ?? new Dictionary<Directions, string>();
+            InventoryNames = inventoryNames ?? new string[0];
+        }
+
+        public static bool operator ==(Room lhs, Room rhs)
         {
             if (ReferenceEquals(lhs, rhs))
             {
                 return true;
             }
-            if(lhs is null || rhs is null)
+
+            if (lhs is null || rhs is null)
             {
                 return false;
             }
 
-            return lhs.Name == rhs.Name;
+            return string.Compare(lhs.Name, rhs.Name, ignoreCase: true) == 0;
         }
 
-        public static bool operator != (Room lhs, Room rhs) => !(lhs == rhs);
-
-        public override bool Equals(object obj) => obj is Room room ? this == room : false;
-
-        public bool Equals(Room other) => this == other;
-        public override string ToString()
+        public static bool operator !=(Room lhs, Room rhs)
         {
-            return Name;
+            return !(lhs == rhs);
         }
 
-        public override int GetHashCode() => Name.GetHashCode();
-        
-        public void UpdateNeighbors(World world) => Neighbors= (from entry in NeighborNames
-                                                     let room = world.RoomsByName.GetValueOrDefault(entry.Value)
-                                                     where room != null
-                                                     select (Direction: entry.Key, Room: room))
-                                                     .ToDictionary(pair=>pair.Direction, pair => pair.Room);
+        public override bool Equals(object obj)
+        {
+            return obj is Room other && other == this;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public void UpdateNeighbors(World world)
+        {
+            Neighbors = new Dictionary<Directions, Room>();
+            foreach (var neighborName in NeighborNames)
+            {
+                Neighbors.Add(neighborName.Key, world.RoomsByName[neighborName.Value]);
+            }
+
+            NeighborNames = null;
+        }
+
+        public void UpdateInventory(World world)
+        {
+            Inventory = new List<Item>();
+            foreach (var inventoryName in InventoryNames)
+            {
+                Inventory.Add(world.ItemsByName[inventoryName]);
+            }
+
+            InventoryNames = null;
+        }
+
+        public override string ToString() => Name;
     }
 }

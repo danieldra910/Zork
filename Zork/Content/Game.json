@@ -1,6 +1,6 @@
 ﻿{
+  "StartingLocation": "West of House",
   "World": {
-    "StartingLocation": "West of House",
     "Rooms": [
       {
         "Name": "West of House",
@@ -9,7 +9,17 @@
           "North": "North of House",
           "South": "South of House",
           "West": "Forest 1"
-        }
+        },
+        "Inventory": [
+          {
+            "Name": "Welcome Mat",
+            "Description": "A rubber welcome mat that says welcome to Zork"
+          },
+          {
+            "Name": "Mailbox",
+            "Description": "A small mailbox"
+          }
+        ]
       },
       {
         "Name": "North of House",
@@ -39,7 +49,7 @@
       },
       {
         "Name": "Forest 1",
-        "LookName": "Forest", 
+        "LookName": "Forest",
         "Description": "This is a forest, with trees in all directions around you.",
         "Neighbors": {
           "South": "Forest 3",

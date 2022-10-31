@@ -1,83 +1,115 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Numerics;
 
 namespace Zork
 {
     public class Game
     {
-        public World World { get; private set; }
+        public World World { get; }
 
-        [JsonIgnore]
-        public Player Player { get; private set; }
+        public Player Player { get; }
 
-        public Game (World world, Player player)
+        public IOutputService Output { get; private set; }
+
+        public Game(World world, string startingLocation)
         {
             World = world;
-            Player = player;
+            Player = new Player(World, startingLocation);
         }
 
-        public void Run()
+        public void Run(IOutputService output)
         {
+            Output = output;
+
             Room previousRoom = null;
-
             bool isRunning = true;
-
             while (isRunning)
             {
-                Console.WriteLine(Player.Location);
-
-                if (previousRoom != Player.Location)
+                Output.WriteLine(Player.CurrentRoom);
+                if (previousRoom != Player.CurrentRoom)
                 {
-                    Console.WriteLine(Player.Location.Description);
-                    previousRoom = Player.Location;
+                    Output.WriteLine(Player.CurrentRoom.Description);
+                    previousRoom = Player.CurrentRoom;
                 }
-                Console.Write("> ");
+
+                Output.Write("> ");
 
                 string inputString = Console.ReadLine().Trim();
-                Commands command = ToCommand(inputString);
+                // might look like:  "LOOK", "TAKE MAT", "QUIT"
+                char separator = ' ';
+                string[] commandTokens = inputString.Split(separator);
 
+                string verb = null;
+                string subject = null;
+                if (commandTokens.Length == 0)
+                {
+                    continue;
+                }
+                else if (commandTokens.Length == 1)
+                {
+                    verb = commandTokens[0];
+
+                }
+                else
+                {
+                    verb = commandTokens[0];
+                    subject = commandTokens[1];
+                }
+
+                Commands command = ToCommand(verb);
+                string outputString;
                 switch (command)
                 {
                     case Commands.Quit:
                         isRunning = false;
-                        inputString = "Thank you for playing!";
+                        outputString = "Thank you for playing!";
                         break;
+
                     case Commands.Look:
-                        inputString = Player.Location.Description;
+                        outputString = Player.CurrentRoom.Description;
                         break;
+
                     case Commands.North:
                     case Commands.South:
                     case Commands.East:
                     case Commands.West:
-                        Directions direction = Enum.Parse<Directions>(command.ToString(), true);
+                        Directions direction = (Directions)command;
                         if (Player.Move(direction))
                         {
-                            inputString = $"You moved {command.ToString()}";
+                            outputString = $"You moved {direction}.";
                         }
                         else
                         {
-                            inputString = "This way is shut!";
+                            outputString = "The way is shut!";
                         }
                         break;
+
+                    case Commands.Take:
+                        //TODO
+                        outputString = null;
+                        break;
+
+                    case Commands.Drop:
+                        //TODO
+                        outputString = null;
+                        break;
+
+                    case Commands.Inventory:
+                        //TODO
+                        outputString = null;
+                        break;
+
                     default:
-                        inputString = "Unknown command";
+                        outputString = "Unknown command.";
                         break;
                 }
-                Console.WriteLine(inputString);
+
+                Output.WriteLine(outputString);
             }
         }
-        private static Commands ToCommand(string commandString)
-        {
-            return Enum.TryParse(commandString, true, out Commands result) ? result : Commands.Unknown;
-        }
 
-        public static Game Load(string filename)
-        {
-            Game game = JsonConvert.DeserializeObject<Game>(File.ReadAllText(filename));
-            game.Player = game.World.SpawnPlayer();
-
-            return game;
-        }
+        private static Commands ToCommand(string commandString) => Enum.TryParse(commandString, true, out Commands result) ? result : Commands.Unknown;
     }
 }
