@@ -1,10 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Zork
+namespace Zork.Common
 {
-
     public class Player
     {
         public Room CurrentRoom

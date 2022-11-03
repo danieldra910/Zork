@@ -1,9 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.IO;
-using System.Numerics;
+﻿using System;
 
-namespace Zork
+namespace Zork.Common
 {
     public class Game
     {
@@ -38,9 +35,9 @@ namespace Zork
 
                 string inputString = Console.ReadLine().Trim();
                 // might look like:  "LOOK", "TAKE MAT", "QUIT"
-                char separator = ' ';
+                char  separator = ' ';
                 string[] commandTokens = inputString.Split(separator);
-
+                
                 string verb = null;
                 string subject = null;
                 if (commandTokens.Length == 0)

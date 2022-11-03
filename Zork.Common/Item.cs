@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Zork
+﻿namespace Zork.Common
 {
     public class Item
     {
@@ -12,7 +8,7 @@ namespace Zork
 
         public string InventoryDescription { get; }
 
-        public Item (string name, string description, string inventoryDescription)
+        public Item(string name, string description, string inventoryDescription)
         {
             Name = name;
             Description = description;
