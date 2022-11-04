@@ -94,7 +94,7 @@ namespace Zork.Common
                         break;
 
                     case Commands.Inventory:
-                        //TODO
+                        ShowPlayerInventory();
                         outputString = null;
                         break;
 
@@ -142,6 +142,22 @@ namespace Zork.Common
                 Player.AddToInventory(itemToTake);
                 Player.CurrentRoom.Inventory.Remove(itemToTake);
                 Output.WriteLine("Taken");
+            }
+        }
+
+        public void ShowPlayerInventory()
+        {
+            if(Player.Inventory.Count ==0)
+            {
+                Output.WriteLine("You don't have any items");
+                return;
+            }
+            else
+            {
+                foreach (Item item in Player.Inventory)
+                {
+                    Output.WriteLine(item);
+                }
             }
         }
 
