@@ -89,7 +89,7 @@ namespace Zork.Common
                         break;
 
                     case Commands.Drop:
-                        //TODO
+                        Drop(subject);
                         outputString = null;
                         break;
 
@@ -140,9 +140,48 @@ namespace Zork.Common
             else
             {
                 Player.AddToInventory(itemToTake);
-                Player.CurrentRoom.Inventory.Remove(itemToTake);
+                Player.CurrentRoom.RemoveFromInventory(itemToTake);
                 Output.WriteLine("Taken");
             }
+        }
+
+        public void Drop(string itmDrop)
+        {
+            Item itemToDrop = null;
+            foreach (Item item in World.Items)
+            {
+                if (string.Compare(item.Name, itmDrop, ignoreCase: true) == 0)
+                {
+                    itemToDrop = item;
+                    break;
+                }
+
+            }
+            if (itemToDrop == null)
+            {
+                throw new ArgumentException("Such item doesn't exist");
+            }
+
+            bool itemIsInInventory = false;
+            foreach (Item item in Player.Inventory)
+            {
+                if (item == itemToDrop)
+                {
+                    itemIsInInventory = true;
+                    break;
+                }
+            }
+            if(!itemIsInInventory)
+            {
+                Output.WriteLine("I don't have such item");
+            }
+            else
+            {
+                Player.RemoveFromInventory(itemToDrop);
+                Player.CurrentRoom.AddToInventory(itemToDrop);
+                Output.WriteLine("Dropped");
+            }
+
         }
 
         public void ShowPlayerInventory()
