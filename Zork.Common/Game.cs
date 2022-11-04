@@ -117,10 +117,11 @@ namespace Zork.Common
                     itemToTake = item;
                     break;
                 }
-                if (itemToTake == null)
-                {
-                    throw new ArgumentException("Such item doesn't exist");
-                }
+                
+            }
+            if (itemToTake == null)
+            {
+                throw new ArgumentException("Such item doesn't exist");
             }
             bool itemIsInRoom = false;
 
