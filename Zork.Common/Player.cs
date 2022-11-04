@@ -36,6 +36,17 @@ namespace Zork.Common
             return didMove;
         }
 
+        
+
+        public void AddToInventory(Item itemToAdd)
+        {
+            Inventory.Add(itemToAdd);
+        }
+
+        public void RemoveFromInventory(Item itemToRemove)
+        {
+            Inventory.Remove(itemToRemove);
+        }
         private World _world;
         private Room _currentRoom;
     }

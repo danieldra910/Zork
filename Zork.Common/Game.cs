@@ -84,7 +84,7 @@ namespace Zork.Common
                         break;
 
                     case Commands.Take:
-                        //TODO
+                        Take(subject);
                         outputString = null;
                         break;
 
@@ -104,6 +104,43 @@ namespace Zork.Common
                 }
 
                 Output.WriteLine(outputString);
+            }
+        }
+
+        public void Take(string itemToAdd)
+        {
+            Item itemToTake = null;
+            foreach (Item item in World.Items)
+            {
+                if (string.Compare(item.Name, itemToAdd, ignoreCase: true) == 0)
+                {
+                    itemToTake = item;
+                    break;
+                }
+                if (itemToTake == null)
+                {
+                    throw new ArgumentException("Such item doesn't exist");
+                }
+            }
+            bool itemIsInRoom = false;
+
+            foreach (Item item in Player.CurrentRoom.Inventory)
+            {
+                if (item == itemToTake)
+                {
+                    itemIsInRoom = true;
+                    break;
+                }
+            }
+            if (!itemIsInRoom)
+            {
+                Output.WriteLine("I can't see such item");
+            }
+            else
+            {
+                Player.AddToInventory(itemToTake);
+                Player.CurrentRoom.Inventory.Remove(itemToTake);
+                Output.WriteLine("Taken");
             }
         }
 
