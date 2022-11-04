@@ -27,14 +27,13 @@ namespace Zork.Common
                 Output.WriteLine(Player.CurrentRoom);
                 if (previousRoom != Player.CurrentRoom)
                 {
-                    Output.WriteLine(Player.CurrentRoom.Description);
+                    Output.WriteLine(Look());
                     previousRoom = Player.CurrentRoom;
                 }
 
                 Output.Write("> ");
 
                 string inputString = Console.ReadLine().Trim();
-                // might look like:  "LOOK", "TAKE MAT", "QUIT"
                 char  separator = ' ';
                 string[] commandTokens = inputString.Split(separator);
                 
@@ -65,7 +64,7 @@ namespace Zork.Common
                         break;
 
                     case Commands.Look:
-                        outputString = Player.CurrentRoom.Description;
+                        outputString = Look();
                         break;
 
                     case Commands.North:
@@ -198,6 +197,17 @@ namespace Zork.Common
                     Output.WriteLine(item);
                 }
             }
+        }
+
+        public string Look()
+        {
+            string look= Player.CurrentRoom.Description;
+            
+            foreach(Item item in Player.CurrentRoom.Inventory)
+            {
+                look += $"\n {item.Description}";
+            }
+            return look;
         }
 
         private static Commands ToCommand(string commandString) => Enum.TryParse(commandString, true, out Commands result) ? result : Commands.Unknown;
