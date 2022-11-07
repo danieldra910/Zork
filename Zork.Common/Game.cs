@@ -120,7 +120,8 @@ namespace Zork.Common
             }
             if (itemToTake == null)
             {
-                throw new ArgumentException("Such item doesn't exist");
+                Output.WriteLine("Such item doesn't exist");
+                return;
             }
             bool itemIsInRoom = false;
 
@@ -158,7 +159,8 @@ namespace Zork.Common
             }
             if (itemToDrop == null)
             {
-                throw new ArgumentException("Such item doesn't exist");
+                Output.WriteLine("Such item doesn't exist");
+                return;
             }
 
             bool itemIsInInventory = false;
