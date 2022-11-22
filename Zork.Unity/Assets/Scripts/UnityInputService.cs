@@ -1,17 +1,27 @@
 using UnityEngine;
 using Zork.Common;
+using TMPro;
+using System;
 
-public class UnityInputService : MonoBehaviour
+public class UnityInputService : MonoBehaviour, IInputService
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField]
+    private TMP_InputField InputField;
+
+    public event EventHandler<string> InputReceived;
+
+    public void ProcessInput()
     {
-        
+        if (string.IsNullOrWhiteSpace(InputField.text))
+        {
+            InputReceived?.Invoke(this, InputField.text.Trim());
+        }
+        InputField.text = string.Empty;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetFocus()
     {
-        
+        InputField.Select();
+        InputField.ActivateInputField();
     }
 }
