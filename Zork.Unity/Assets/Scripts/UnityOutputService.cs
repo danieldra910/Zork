@@ -12,6 +12,13 @@ public class UnityOutputService : MonoBehaviour, IOutputService
     [SerializeField]
     private Image NewLinePrefab;
 
+    [SerializeField]
+    private Transform ContentTransform;
+
+    [SerializeField]
+    [Range(0, 1000)]
+    private int MaxEntries;
+
     public void Write (object message)
     {
         ParseAndWriteLine(message.ToString());
@@ -24,21 +31,39 @@ public class UnityOutputService : MonoBehaviour, IOutputService
 
     public void WriteLine(object message)
     {
-        ParseAndWriteLine(message.ToString());
+        char separator = '\n';
+        string[] strings = message.ToString().Split(separator);
+        foreach (string s in strings)
+        {
+            if (!s.Equals(separator))
+                ParseAndWriteLine(s);
+        }
+
     }
 
     public void WriteLine(string message)
     {
-        ParseAndWriteLine(message);
+        char separator = '\n';
+        string[] strings = message.Split (separator);
+        foreach (string s in strings) 
+        {
+            if (!s.Equals(separator))
+                ParseAndWriteLine(s);
+        }
+        //ParseAndWriteLine(message);
     }
 
     private void ParseAndWriteLine(string message)
     {
-        var textLine = Instantiate(TextLinePrefab,gameObject.transform);
+        if(_entries.Count >= MaxEntries)
+        {
+            _entries.Clear();
+        }
+        var textLine = Instantiate(TextLinePrefab, ContentTransform);
         textLine.text = message;
-        _entries.Add(textLine.gameObject);
-        
+        _entries.Enqueue(textLine.gameObject);
+
     }
 
-    private List<GameObject> _entries = new List<GameObject> ();
+    private Queue<GameObject> _entries = new Queue<GameObject> ();
 }
