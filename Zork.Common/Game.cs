@@ -69,6 +69,7 @@ namespace Zork.Common
                     break;
 
                 case Commands.Look:
+                    Player.IncreaseMoves();
                     Look();
                     break;
 
@@ -77,10 +78,12 @@ namespace Zork.Common
                 case Commands.East:
                 case Commands.West:
                     Directions direction = (Directions)command;
+                    Player.IncreaseMoves();
                     Output.WriteLine(Player.Move(direction) ? $"You moved {direction}." : "The way is shut!");
                     break;
 
                 case Commands.Take:
+                    Player.IncreaseMoves();
                     if (string.IsNullOrEmpty(subject))
                     {
                         Output.WriteLine("This command requires a subject.");
@@ -92,6 +95,7 @@ namespace Zork.Common
                     break;
 
                 case Commands.Drop:
+                    Player.IncreaseMoves();
                     if (string.IsNullOrEmpty(subject))
                     {
                         Output.WriteLine("This command requires a subject.");
@@ -103,6 +107,7 @@ namespace Zork.Common
                     break;
 
                 case Commands.Inventory:
+                    Player.IncreaseMoves();
                     if (Player.Inventory.Count() == 0)
                     {
                         Console.WriteLine("You are empty handed.");
@@ -115,6 +120,15 @@ namespace Zork.Common
                             Output.WriteLine(item.InventoryDescription);
                         }
                     }
+                    break;
+
+                case Commands.Score:
+                    Output.WriteLine($"Your score is {Player.Score}, in {Player.Moves} move(s)");
+                    break;
+                case Commands.Reward:
+                    Player.IncreaseMoves();
+                    Player.IncreaseScore();
+                    Output.WriteLine("You somehow found a hidden treasure");
                     break;
 
                 default:

@@ -11,11 +11,32 @@ namespace Zork.Common
             get => _currentRoom;
             set
             {
-                _currentRoom = value;
                 if(_currentRoom != value)
                 {
                     _currentRoom = value;
                     LocationChanged?.Invoke(this, _currentRoom);
+                }
+            }
+        }
+        public EventHandler<int> MovesChanged;
+        public int Moves { get=> _moves;
+            set
+            {
+                if(_moves!= value)
+                {
+                    _moves = value;
+                    MovesChanged?.Invoke(this, _moves);
+                }
+            }
+        }
+        public EventHandler<int> ScoreChanged;
+        public int Score { get=> _score; 
+            set
+            {
+                if (_score != value)
+                {
+                    _score = value;
+                    ScoreChanged?.Invoke(this, _score);
                 }
             }
         }
@@ -32,6 +53,7 @@ namespace Zork.Common
             }
 
             _inventory = new List<Item>();
+
         }
 
         public bool Move(Directions direction)
@@ -63,6 +85,18 @@ namespace Zork.Common
             }
         }
 
+        public void IncreaseMoves()
+        {
+            _moves++;
+        }
+
+        public void IncreaseScore()
+        {
+            _score+=5;
+        }
+
+        private int _moves = 0;
+        private int _score = 0;
         private readonly World _world;
         private Room _currentRoom;
         private readonly List<Item> _inventory;
